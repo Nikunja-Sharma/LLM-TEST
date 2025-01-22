@@ -2,10 +2,11 @@ import OpenAI from "openai"
 import { ChatOpenAI } from "@langchain/openai"
 import { LLMChain } from "langchain/chains"
 import { PromptTemplate } from "@langchain/core/prompts"
-
+import dotenv from "dotenv"
+dotenv.config()
 const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
-  apiKey: "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",
+  apiKey: process.env.OPENROUTER_API_KEY,
   defaultHeaders: {
     "HTTP-Referer": "<YOUR_SITE_URL>", // Optional. Site URL for rankings on openrouter.ai.
     "X-Title": "<YOUR_SITE_NAME>", // Optional. Site title for rankings on openrouter.ai.
@@ -23,7 +24,7 @@ const models = {
       }
     },
     modelName: "google/gemini-2.0-flash-thinking-exp-1219:free",
-    openAIApiKey: "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",
+    openAIApiKey: process.env.OPENROUTER_API_KEY,
   }),
   alpha: new ChatOpenAI({
     configuration: {
@@ -34,7 +35,7 @@ const models = {
       }
     },
     modelName: "google/gemini-2.0-flash-thinking-exp-1219:free",
-    openAIApiKey: "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",
+    openAIApiKey: process.env.OPENROUTER_API_KEY,
   }),
   beta: new ChatOpenAI({
     configuration: {
@@ -45,7 +46,7 @@ const models = {
       }
     },
     modelName: "google/gemini-2.0-flash-thinking-exp-1219:free",
-    openAIApiKey: "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",
+    openAIApiKey: process.env.OPENROUTER_API_KEY,
   }),
   gamma: new ChatOpenAI({
     configuration: {
@@ -56,7 +57,7 @@ const models = {
       }
     },
     modelName: "google/gemini-2.0-flash-thinking-exp-1219:free",
-    openAIApiKey: "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",
+    openAIApiKey: process.env.OPENROUTER_API_KEY,
   }),
   delta: new ChatOpenAI({
     configuration: {
@@ -67,7 +68,7 @@ const models = {
       }
     },
     modelName: "google/gemini-2.0-flash-thinking-exp-1219:free",
-    openAIApiKey: "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",
+    openAIApiKey: process.env.OPENROUTER_API_KEY,
   }),
   omega: new ChatOpenAI({
     configuration: {
@@ -78,7 +79,7 @@ const models = {
       }
     },
     modelName: "google/gemini-2.0-flash-thinking-exp-1219:free",
-    openAIApiKey: "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",
+    openAIApiKey: process.env.OPENROUTER_API_KEY,
   }),
 }
 
