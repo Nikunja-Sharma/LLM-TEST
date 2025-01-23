@@ -1,0 +1,5 @@
+function calculateCircleArea(radius) {
+    console.log('😅❤️ Calling function: calculateCircleArea');
+    console.log('📎 Arguments:', radius);
+    return Math.PI * radius * radius;
+}

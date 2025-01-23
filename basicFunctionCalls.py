@@ -5,12 +5,16 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langgraph.graph import StateGraph, END
 from langchain_core.tools import tool
 import re
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Initialize the LLM with proper chat configuration
 llm = ChatOpenAI(
-    base_url="https://openrouter.ai/api/v1",
-    api_key="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",
-    model="meta-llama/llama-3-8b-instruct:free",  # Corrected model name
+    base_url=os.getenv('OPENROUTER_BASE_URL'),
+    api_key=os.getenv('OPENROUTER_API_KEY'),
+    model=os.getenv('OPENROUTER_MODEL_NAME'),
     # temperature=0
 )
 
@@ -25,7 +29,7 @@ def calculate(math_expression: str) -> str:
     """Useful for mathematical calculations. Input should be a valid numerical expression using +, -, *, /, or parentheses."""
     try:
         print(f"Calculator called with expression: {math_expression}")  # Better debug message
-        print("asddddddddddddddddddddddddddddddddddddddddmessages")
+        print("Calculator called with expressionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn: ", math_expression)
         # Strip whitespace and validate input
         math_expression = math_expression.strip()
         if not math_expression:
