@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 import { ChatOpenAI } from "@langchain/openai";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import fs from 'fs/promises';
+import readline from 'readline';
+import { stdin as input, stdout as output } from 'process';
 
 // Load environment variables
 dotenv.config();
@@ -141,19 +143,24 @@ const createAndStoreFunction = async (functionDefinition) => {
 // Modified agent function to be more strict about function reuse
 const agentNode = async (state) => {
     console.log('\n🤖 Agent Node Started');
-    const systemPrompt = `You are a helpful assistant that can create and execute custom functions.
-    When you need to create a function, write it in the following format:
-    <function>
-    function customFunction(params) {
-        // function body
-        return result;
-    }
-    </function>
     
-    Then call it using:
-    <execute>customFunction(args)</execute>
-    `;
-    
+    const systemPrompt = `You are a helpful assistant that creates JavaScript functions based on user requests.
+When creating a function:
+1. Analyze the user's request
+2. Create an appropriate function with proper parameter names
+3. Include input validation where needed
+4. Return the result directly (don't use console.log in the return)
+
+Format your response EXACTLY like this example:
+<function>
+function add(a, b) {
+    return a + b;
+}
+</function>
+
+Then add a test case like this:
+<execute>add(5, 3)</execute>`;
+
     const messages = [
         new SystemMessage(systemPrompt),
         new HumanMessage(state.input)
@@ -176,7 +183,6 @@ const agentNode = async (state) => {
             const fn = await createAndStoreFunction(functionDef);
             if (fn) {
                 functions.set(fnName, fn);
-                result = result.replace(match[0], `Using function: ${fnName}`);
             }
         }
     }
@@ -197,10 +203,8 @@ const agentNode = async (state) => {
                 const args = eval(`[${argsMatch}]`);
                 console.log('📊 Function:', fnName);
                 console.log('🔢 Arguments:', args);
-                console.log('🎬 Starting execution...');
                 const execResult = await fn(...args);
                 console.log('✨ Result:', execResult);
-                console.log('✅ Execution completed');
                 result = result.replace(match[0], String(execResult));
             } catch (e) {
                 console.error('❌ Execution error:', e.message);
@@ -212,30 +216,61 @@ const agentNode = async (state) => {
     return { output: result };
 };
 
-// Test function
-const runTests = async () => {
-    const testCases = [
-        `Create a function to calculate the area of a circle and use it:
-        <function>
-        function calculateCircleArea(radius) {
-            return Math.PI * radius * radius;
-        }
-        </function>
-        The area of a circle with radius 5 is: <execute>calculateCircleArea(5)</execute>
-        `
-    ];
+const getUserInput = (question) => {
+    const rl = readline.createInterface({ input, output });
 
+    return new Promise((resolve) => {
+        rl.question(question, (answer) => {
+            rl.close();
+            resolve(answer);
+        });
+    });
+};
+
+const runInteractive = async () => {
     try {
-        for (const query of testCases) {
-            const state = { input: query, output: null };
+        console.log('\n🎯 Interactive Function Creator');
+        console.log('📝 Example prompts:');
+        console.log('- "Calculate 33 + 12321"');
+        console.log('- "Convert 98.6°F to Celsius"');
+        console.log('- "Calculate area of circle with radius 5"');
+        console.log('- "Convert 10 kilometers to miles"');
+        console.log('\n💡 Type "exit" to quit the program\n');
+
+        while (true) {
+            const userPrompt = await getUserInput('🤖 What function would you like me to create? ');
+            
+            if (userPrompt.toLowerCase() === 'exit') {
+                console.log('\n👋 Goodbye! Thanks for using the Function Creator!\n');
+                break;
+            }
+
+            console.log('\n⚙️ Processing your request...');
+            
+            const state = { 
+                input: userPrompt,
+                output: null 
+            };
+            
             const result = await agentNode(state);
-            console.log(`\nQuery: ${query}`);
-            console.log(`Result: ${result.output}`);
+            
+            // Extract and display the actual result
+            const executeMatch = result.output.match(/<execute>.*?<\/execute>/);
+            if (executeMatch) {
+                const finalResult = result.output.replace(executeMatch[0], '');
+                console.log('\n📝 Created Function Result:', finalResult);
+            }
+            
+            console.log('\n' + '➖'.repeat(50) + '\n');
         }
+        
     } catch (e) {
-        console.error(`An error occurred: ${e.message}`);
+        console.error('\n❌ Error:', e.message);
     }
 };
 
-// Run the tests
-runTests(); 
+// Make sure your package.json has "type": "module"
+// or rename the file to .mjs extension
+
+// Replace runTests() with runInteractive()
+runInteractive(); 
