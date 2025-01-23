@@ -5,7 +5,7 @@ import { PromptTemplate } from "@langchain/core/prompts"
 import dotenv from "dotenv"
 dotenv.config()
 const openai = new OpenAI({
-  baseURL: "https://openrouter.ai/api/v1",
+  baseURL: process.env.OPENROUTER_BASE_URL,
   apiKey: process.env.OPENROUTER_API_KEY,
   defaultHeaders: {
     "HTTP-Referer": "<YOUR_SITE_URL>", // Optional. Site URL for rankings on openrouter.ai.
@@ -17,68 +17,68 @@ const openai = new OpenAI({
 const models = {
   master: new ChatOpenAI({
     configuration: {
-      baseURL: "https://openrouter.ai/api/v1",
+      baseURL: process.env.OPENROUTER_BASE_URL,
       defaultHeaders: {
         "HTTP-Referer": "<YOUR_SITE_URL>",
         "X-Title": "<YOUR_SITE_NAME>",
       }
     },
-    modelName: "google/gemini-2.0-flash-thinking-exp-1219:free",
+    modelName: process.env.OPENROUTER_MODEL_NAME,
     openAIApiKey: process.env.OPENROUTER_API_KEY,
   }),
   alpha: new ChatOpenAI({
     configuration: {
-      baseURL: "https://openrouter.ai/api/v1",
+      baseURL: process.env.OPENROUTER_BASE_URL,
       defaultHeaders: {
         "HTTP-Referer": "<YOUR_SITE_URL>",
         "X-Title": "<YOUR_SITE_NAME>",
       }
     },
-    modelName: "google/gemini-2.0-flash-thinking-exp-1219:free",
+    modelName: process.env.OPENROUTER_MODEL_NAME,
     openAIApiKey: process.env.OPENROUTER_API_KEY,
   }),
   beta: new ChatOpenAI({
     configuration: {
-      baseURL: "https://openrouter.ai/api/v1",
+      baseURL: process.env.OPENROUTER_BASE_URL,
       defaultHeaders: {
         "HTTP-Referer": "<YOUR_SITE_URL>",
         "X-Title": "<YOUR_SITE_NAME>",
       }
     },
-    modelName: "google/gemini-2.0-flash-thinking-exp-1219:free",
+    modelName: process.env.OPENROUTER_MODEL_NAME,
     openAIApiKey: process.env.OPENROUTER_API_KEY,
   }),
   gamma: new ChatOpenAI({
     configuration: {
-      baseURL: "https://openrouter.ai/api/v1",
+      baseURL: process.env.OPENROUTER_BASE_URL,
       defaultHeaders: {
         "HTTP-Referer": "<YOUR_SITE_URL>",
         "X-Title": "<YOUR_SITE_NAME>",
       }
     },
-    modelName: "google/gemini-2.0-flash-thinking-exp-1219:free",
+    modelName: process.env.OPENROUTER_MODEL_NAME,
     openAIApiKey: process.env.OPENROUTER_API_KEY,
   }),
   delta: new ChatOpenAI({
     configuration: {
-      baseURL: "https://openrouter.ai/api/v1",
+      baseURL: process.env.OPENROUTER_BASE_URL,
       defaultHeaders: {
         "HTTP-Referer": "<YOUR_SITE_URL>",
         "X-Title": "<YOUR_SITE_NAME>",
       }
     },
-    modelName: "google/gemini-2.0-flash-thinking-exp-1219:free",
+    modelName: process.env.OPENROUTER_MODEL_NAME,
     openAIApiKey: process.env.OPENROUTER_API_KEY,
   }),
   omega: new ChatOpenAI({
     configuration: {
-      baseURL: "https://openrouter.ai/api/v1",
+      baseURL: process.env.OPENROUTER_BASE_URL,
       defaultHeaders: {
         "HTTP-Referer": "<YOUR_SITE_URL>",
         "X-Title": "<YOUR_SITE_NAME>",
       }
     },
-    modelName: "google/gemini-2.0-flash-thinking-exp-1219:free",
+    modelName: process.env.OPENROUTER_MODEL_NAME,
     openAIApiKey: process.env.OPENROUTER_API_KEY,
   }),
 }
